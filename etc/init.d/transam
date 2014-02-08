@@ -1,0 +1,83 @@
+#!/bin/bash
+#
+# transam        Starts TransAm XMLRPC Server
+#
+#
+# chkconfig: 2345 86 14
+# description: TransAm XMLRPC Server
+### BEGIN INIT INFO
+# Provides: $transam
+### END INIT INFO
+
+# Source function library.
+. /etc/init.d/functions
+
+RETVAL=0
+
+#NOTE: You should change this to your install path.  I haven't packaged this yet...
+TRANSAMDIR=/usr/local/transam
+
+PYTHONPATH=$TRANSAMDIR
+export PYTHONPATH
+
+start() {
+	cd $TRANSAMDIR
+	nohup $TRANSAMDIR/transam.py > /dev/null &
+
+	status
+}
+
+stop() {
+	status
+	/usr/bin/pkill -f "$TRANSAMDIR/transam.py"
+	status
+	return 0
+}
+
+restart() {
+	stop
+	sleep 1
+    start
+}
+
+status() {
+	COUNT=`/bin/ps -ef | grep "$TRANSAMDIR/transam.py" | grep -v grep | wc -l`
+
+	if [ $COUNT -ne 0 ] ; then
+		echo "TransAm is running"
+		return 0
+	else
+		echo "TranAm is stopped"
+		return 1
+	fi
+}
+
+test() {
+  # Check that the database actually works
+  $TRANSAMDIR/monitor.py
+  return $?
+}
+
+case "$1" in
+  start)
+  	start
+	;;
+  stop)
+  	stop
+	;;
+  status)
+  	status
+	;;
+  restart)
+  	restart
+	;;
+  test)
+    test
+  ;;
+  *)
+	echo $"Usage: $0 {start|stop|status|test|restart}"
+	exit 2
+esac
+
+exit $?
+
