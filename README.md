@@ -1,6 +1,6 @@
-## transam
+## versionman
 
-TransAm is a database versioning API, so that you can maintain logs of changes and doing roll-backs and other good vesioning stuff like that.
+VersionMan is a database versioning API, so that you can maintain logs of changes and doing roll-backs and other good vesioning stuff like that.
 
 MySQL is currently the only implemented backend DB, but it was designed to add more as I need them.
 
